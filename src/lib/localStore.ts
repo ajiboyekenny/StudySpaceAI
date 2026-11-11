@@ -39,6 +39,23 @@ export function removeKey(key: string) {
   window.dispatchEvent(new Event(CHANGE_EVENT));
 }
 
+export function removeAccountStudyCache() {
+  const accountKeys = [
+    'studyspace:profile',
+    'studyspace:saved-chapters',
+    'studyspace:quiz-history',
+    'studyspace:study-streak',
+    'studyspace:challenge-submissions',
+    'studyspace:leaderboard',
+    'studyspace:unlocked-achievements',
+  ];
+  accountKeys.forEach((key) => localStorage.removeItem(key));
+  Object.keys(localStorage)
+    .filter((key) => key.startsWith('studyspace:chapter:') || key.startsWith('studyspace:cards:') || key.startsWith('studyspace:retention:'))
+    .forEach((key) => localStorage.removeItem(key));
+  window.dispatchEvent(new Event(CHANGE_EVENT));
+}
+
 export function useStoredValue<T>(key: string, fallback: T): T {
   const raw = useSyncExternalStore(
     subscribeToChanges,

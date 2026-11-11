@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/integrations/supabase/client';
 import { readJson, writeJson, useStoredValue } from '@/lib/localStore';
 import type { UserProfile, EducationLevel } from '@/types/gamify';
 
@@ -48,8 +48,10 @@ export async function syncProfile(): Promise<void> {
       onboarded: data.onboarded ?? false,
     };
     const local = readJson<UserProfile>(PROFILE_KEY, DEFAULT_PROFILE);
-    if (!local.onboarded && profile.onboarded) {
+    if (profile.onboarded) {
       writeJson(PROFILE_KEY, profile);
+    } else if (local.onboarded) {
+      await saveProfile(local);
     }
   }
 }
