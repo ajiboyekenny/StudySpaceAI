@@ -14,13 +14,285 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      studyspace_achievements: {
+        Row: {
+          achievement_id: string
+          unlocked_at: string
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Update: {
+          achievement_id?: string
+          unlocked_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      studyspace_card_progress: {
+        Row: {
+          card_id: string
+          chapter_id: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          card_id: string
+          chapter_id: string
+          status: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          card_id?: string
+          chapter_id?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      studyspace_challenge_submissions: {
+        Row: {
+          challenge_id: string
+          id: string
+          points_earned: number
+          score: number
+          taken_at: string
+          time_taken_seconds: number
+          total: number
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          id?: string
+          points_earned?: number
+          score: number
+          taken_at?: string
+          time_taken_seconds: number
+          total: number
+          user_id?: string
+        }
+        Update: {
+          challenge_id?: string
+          id?: string
+          points_earned?: number
+          score?: number
+          taken_at?: string
+          time_taken_seconds?: number
+          total?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "studyspace_challenge_submissions_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "studyspace_weekly_challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      studyspace_points: {
+        Row: {
+          total_points: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          total_points?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          total_points?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      studyspace_profiles: {
+        Row: {
+          display_name: string
+          education_level: string
+          onboarded: boolean
+          selected_subjects: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          display_name?: string
+          education_level?: string
+          onboarded?: boolean
+          selected_subjects?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          display_name?: string
+          education_level?: string
+          onboarded?: boolean
+          selected_subjects?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      studyspace_question_progress: {
+        Row: {
+          chapter_id: string
+          question_id: string
+          retention: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          chapter_id: string
+          question_id: string
+          retention?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          chapter_id?: string
+          question_id?: string
+          retention?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      studyspace_quiz_attempts: {
+        Row: {
+          chapter_id: string
+          id: string
+          score: number
+          subject: string
+          taken_at: string
+          total: number
+          user_id: string
+        }
+        Insert: {
+          chapter_id: string
+          id?: string
+          score: number
+          subject: string
+          taken_at?: string
+          total: number
+          user_id?: string
+        }
+        Update: {
+          chapter_id?: string
+          id?: string
+          score?: number
+          subject?: string
+          taken_at?: string
+          total?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      studyspace_saved_chapters: {
+        Row: {
+          chapter_id: string
+          chapter_snapshot: Json
+          saved_at: string
+          user_id: string
+        }
+        Insert: {
+          chapter_id: string
+          chapter_snapshot: Json
+          saved_at?: string
+          user_id?: string
+        }
+        Update: {
+          chapter_id?: string
+          chapter_snapshot?: Json
+          saved_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      studyspace_streaks: {
+        Row: {
+          current_streak: number
+          last_study_date: string | null
+          longest_streak: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          current_streak?: number
+          last_study_date?: string | null
+          longest_streak?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          current_streak?: number
+          last_study_date?: string | null
+          longest_streak?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      studyspace_weekly_challenges: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string
+          id: string
+          max_points: number
+          questions: Json
+          subject: string
+          time_limit_seconds: number
+          title: string
+          week_key: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string
+          id?: string
+          max_points?: number
+          questions?: Json
+          subject: string
+          time_limit_seconds?: number
+          title: string
+          week_key: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string
+          id?: string
+          max_points?: number
+          questions?: Json
+          subject?: string
+          time_limit_seconds?: number
+          title?: string
+          week_key?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_studyspace_leaderboard: {
+        Args: never
+        Returns: {
+          display_name: string
+          total_points: number
+          updated_at: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
