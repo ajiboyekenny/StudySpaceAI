@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0A0F1D"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="book" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00D2FF"/>
+      <stop offset="100%" stop-color="#0052D4"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect x="16" y="16" width="480" height="480" rx="96" fill="none" stroke="#00D2FF" stroke-opacity="0.35" stroke-width="2"/>
+  <g transform="translate(96 150)">
+    <path d="M160 24 C160 18 155 14 149 16 C110 28 60 32 24 32 C18 32 14 37 14 43 L14 152 C14 158 18 162 24 162 C60 162 110 158 149 170 C155 172 160 168 160 162 Z" fill="url(#book)" opacity="0.95"/>
+    <path d="M160 24 C160 18 165 14 171 16 C210 28 260 32 296 32 C302 32 306 37 306 43 L306 152 C306 158 302 162 296 162 C260 162 210 158 171 170 C165 172 160 168 160 162 Z" fill="url(#book)" opacity="0.7"/>
+    <path d="M160 24 L160 162" stroke="#0A0F1D" stroke-width="3" stroke-linecap="round"/>
+    <path d="M50 70 L120 70 M50 90 L120 90 M50 110 L100 110" stroke="#0A0F1D" stroke-opacity="0.5" stroke-width="4" stroke-linecap="round"/>
+    <path d="M200 70 L270 70 M200 90 L270 90 M200 110 L250 110" stroke="#0A0F1D" stroke-opacity="0.5" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(322 120)">
+    <circle cx="24" cy="24" r="26" fill="#FFB703"/>
+    <path d="M26 6 L12 28 L22 28 L18 44 L36 20 L26 20 L30 6 Z" fill="#0A0F1D"/>
+  </g>
+</svg>
