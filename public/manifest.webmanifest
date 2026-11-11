@@ -1,0 +1,19 @@
+{
+  "name": "StudySpace AI: STEM Learning Hub",
+  "short_name": "StudySpace AI",
+  "description": "Download Once, Learn Everywhere. An AI-powered offline learning hub for Nigerian STEM students across UTME/JAMB, SSCE/WAEC, and University 100-Level.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0A0F1D",
+  "theme_color": "#0A0F1D",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+  ]
+}
