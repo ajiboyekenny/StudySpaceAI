@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/integrations/supabase/client';
 import { readJson, writeJson, useStoredValue } from '@/lib/localStore';
 import type { WeeklyChallenge, ChallengeSubmission, LeaderboardEntry } from '@/types/gamify';
 
@@ -125,8 +125,7 @@ export async function syncChallengeSubmissions(): Promise<void> {
 
 export async function syncLeaderboard(): Promise<void> {
   const { data } = await supabase
-    .from('studyspace_leaderboard')
-    .select('display_name, total_points, updated_at')
+    .rpc('get_studyspace_leaderboard')
     .limit(50);
 
   if (data) {

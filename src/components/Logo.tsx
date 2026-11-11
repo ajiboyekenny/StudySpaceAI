@@ -1,3 +1,5 @@
+import logoAsset from '@/assets/studyspace-logo.jpg.asset.json';
+
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
 }
@@ -11,7 +13,7 @@ const SIZES = {
 export default function Logo({ size = 'md' }: LogoProps) {
   return (
     <img
-      src="/photo_2026-11-10_22-24-04%20copy.jpg"
+      src={logoAsset.url}
       alt="StudySpace AI logo"
       className={`${SIZES[size]} rounded-full object-cover shadow-lg shadow-cyan-500/30 ring-2 ring-cyan-400/60`}
     />

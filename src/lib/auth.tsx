@@ -1,15 +1,22 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
-import { supabase, supabaseConfigReady } from '@/lib/supabaseClient';
+import { supabase } from '@/integrations/supabase/client';
 import { syncStudyData } from '@/lib/cloudStudySync';
+import { readJson, removeAccountStudyCache, writeJson } from '@/lib/localStore';
 
 interface AuthContextValue {
   session: Session | null;
   user: User | null;
   loading: boolean;
-  signUp: (email: string, password: string) => Promise<{ error: string | null }>;
+  signUp: (email: string, password: string) => Promise<{ error: string | null; needsConfirmation?: boolean }>;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
+}
+
+async function prepareAccount(userId: string) {
+  const previousUserId = readJson<string | null>('studyspace:active-account-id', null);
+  if (previousUserId && previousUserId !== userId) removeAccountStudyCache();
+  writeJson('studyspace:active-account-id', userId);
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -41,16 +48,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let mounted = true;
 
     const loadSession = async () => {
-      if (!supabaseConfigReady) {
-        setLoading(false);
-        return;
-      }
       try {
         const { data } = await supabase.auth.getSession();
         if (!mounted) return;
         setSession(data.session);
         setLoading(false);
-        if (data.session) void syncStudyData();
+        if (data.session) {
+          void prepareAccount(data.session.user.id).then(syncStudyData);
+        }
       } catch {
         if (!mounted) return;
         setLoading(false);
@@ -58,13 +63,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     void loadSession();
 
-    const { data: subscription } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    const { data: subscription } = supabase.auth.onAuthStateChange((event, newSession) => {
+      if (!['SIGNED_IN', 'SIGNED_OUT', 'USER_UPDATED'].includes(event)) return;
       setSession(newSession);
       setLoading(false);
       if (newSession) {
-        (async () => {
-          await syncStudyData();
-        })();
+        void prepareAccount(newSession.user.id).then(syncStudyData);
+      } else if (event === 'SIGNED_OUT') {
+        removeAccountStudyCache();
+        localStorage.removeItem('studyspace:active-account-id');
       }
     });
 
@@ -80,13 +87,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user: session?.user ?? null,
       loading,
       async signUp(email, password) {
-        if (!supabaseConfigReady) return { error: 'The account service is not connected in this preview yet. Please reopen the published app and try again.' };
-        const { error } = await supabase.auth.signUp({ email, password });
+        const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin } });
         if (error) return { error: describeAuthError(error.message) };
-        return { error: null };
+        return { error: null, needsConfirmation: !data.session };
       },
       async signIn(email, password) {
-        if (!supabaseConfigReady) return { error: 'The account service is not connected in this preview yet. Please reopen the published app and try again.' };
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) return { error: describeAuthError(error.message) };
         return { error: null };

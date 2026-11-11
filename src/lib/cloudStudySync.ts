@@ -2,7 +2,7 @@ import type { Chapter } from '@/types/study';
 import type { CardStatus, CardStatusMap, QuizAttempt, RetentionMap, StudyStreak } from '@/lib/studyProgress';
 import type { SavedChapterSnapshot } from '@/lib/offlineLibrary';
 import { readJson, writeJson } from '@/lib/localStore';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/integrations/supabase/client';
 import { syncProfile } from '@/lib/profileSync';
 import { syncAchievements } from '@/lib/achievements';
 import { syncChallengeSubmissions, syncLeaderboard } from '@/lib/challengeSync';

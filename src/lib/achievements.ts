@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/integrations/supabase/client';
 import { readJson, writeJson, useStoredValue } from '@/lib/localStore';
 import { ACHIEVEMENTS, type Achievement } from '@/types/gamify';
 
@@ -67,8 +67,9 @@ function meetsCondition(achievement: Achievement, stats: AchievementStats): bool
 async function persistAchievements(ids: string[]): Promise<void> {
   const { data: userData } = await supabase.auth.getUser();
   if (!userData.user) return;
+  const userId = userData.user.id;
   const rows = ids.map((id) => ({
-    user_id: userData.user!.id,
+    user_id: userId,
     achievement_id: id,
     unlocked_at: new Date().toISOString(),
   }));
