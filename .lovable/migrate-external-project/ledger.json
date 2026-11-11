@@ -1,0 +1,19 @@
+{
+  "source": "Bolt ZIP uploaded as project-bolt-sb1-xt7zpxrc_2.zip",
+  "capabilities": [
+    { "capability": "code", "source": "React/Vite StudySpace app, catalog, study tools, offline vault and assets", "outcome": "migrate", "status": "pending", "next_action": "Port app experience to the current Lovable project." },
+    { "capability": "schema", "source": "Supabase migrations for profiles, study progress, challenges, points and achievements", "outcome": "migrate", "status": "pending", "next_action": "Enable Lovable Cloud and recreate the schema with matching access policies." },
+    { "capability": "records", "source": "No application records export was included", "outcome": "migrate", "status": "pending", "next_action": "Request sanitized application-table exports after the preview." },
+    { "capability": "auth identities", "source": "Supabase email/password auth; no user export was included", "outcome": "migrate", "status": "pending", "next_action": "Request user export with original IDs and email addresses after the preview; verify first-login setup." },
+    { "capability": "authorization", "source": "Owner-scoped RLS policies, authenticated shared challenge reads, leaderboard view", "outcome": "migrate", "status": "pending", "next_action": "Preserve access boundaries in Lovable Cloud and verify representative account access." },
+    { "capability": "uploaded file bytes", "source": "Two bundled study image files and app icons; no remote storage buckets detected", "outcome": "migrate", "status": "pending", "next_action": "Carry over app assets; no user storage export was present." },
+    { "capability": "external providers", "source": "Supabase auth and database only; no other external provider detected", "outcome": "replace", "status": "pending", "next_action": "Replace with Lovable Cloud." },
+    { "capability": "public endpoints", "source": "No public API endpoints detected", "outcome": "none", "status": "verified", "next_action": "None found in inspected source." },
+    { "capability": "callbacks", "source": "No non-auth OAuth callbacks detected", "outcome": "none", "status": "verified", "next_action": "None found in inspected source." },
+    { "capability": "webhooks", "source": "No webhooks detected", "outcome": "none", "status": "verified", "next_action": "None found in inspected source." },
+    { "capability": "schedules", "source": "No scheduled jobs detected", "outcome": "none", "status": "verified", "next_action": "None found in inspected source." },
+    { "capability": "secrets", "source": "Source env names include Supabase URL and anon key; values excluded from inspection", "outcome": "replace", "status": "pending", "next_action": "Use generated Lovable Cloud configuration; do not copy source credentials." },
+    { "capability": "cutover", "source": "Bolt source project; new Lovable deployment requested", "outcome": "new deployment", "status": "pending", "next_action": "Publish the Lovable version and provide its live URL." },
+    { "capability": "verification", "source": "No live source credentials or exported production records supplied", "outcome": "verify preview and safe flows", "status": "pending", "next_action": "Verify public app experience; authenticated legacy-user migration remains pending export." }
+  ]
+}
