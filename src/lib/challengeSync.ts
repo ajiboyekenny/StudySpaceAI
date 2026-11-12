@@ -32,7 +32,18 @@ export async function fetchActiveChallenge(): Promise<WeeklyChallenge | null> {
     title: data.title,
     description: data.description ?? '',
     subject: data.subject,
-    questions: data.questions ?? [],
+    questions: Array.isArray(data.questions)
+      ? data.questions.filter((question): question is WeeklyChallenge['questions'][number] => {
+          if (typeof question !== 'object' || question === null || Array.isArray(question)) return false;
+          const item = question as Record<string, unknown>;
+          return typeof item['id'] === 'string'
+            && typeof item['question'] === 'string'
+            && Array.isArray(item['options'])
+            && item['options'].every((option) => typeof option === 'string')
+            && typeof item['answerIndex'] === 'number'
+            && typeof item['explanation'] === 'string';
+        })
+      : [],
     time_limit_seconds: data.time_limit_seconds,
     max_points: data.max_points,
     active: data.active,

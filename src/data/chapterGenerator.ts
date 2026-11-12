@@ -104,6 +104,9 @@ function chapterId(subject: SubjectId, number: number): string {
 
 function buildOutlineChapter(subject: SubjectId, number: number): Chapter {
   const outline = OUTLINES[subject][number - 1];
+  if (!outline) {
+    throw new Error(`No chapter outline for ${subject} chapter ${number}`);
+  }
   return {
     id: chapterId(subject, number),
     subject,

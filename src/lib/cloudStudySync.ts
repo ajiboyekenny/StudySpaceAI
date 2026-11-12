@@ -58,7 +58,7 @@ export async function persistSavedChapter(snapshot: SavedChapterSnapshot): Promi
   await supabase.from('studyspace_saved_chapters').upsert({
     user_id: userId,
     chapter_id: snapshot.chapter.id,
-    chapter_snapshot: snapshot.chapter,
+    chapter_snapshot: JSON.parse(JSON.stringify(snapshot.chapter)) as import('@/integrations/supabase/types').Json,
     saved_at: snapshot.savedAt,
   });
 }
