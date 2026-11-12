@@ -1,12 +1,32 @@
 import { supabase } from '@/integrations/supabase/client';
 import { readJson, writeJson, useStoredValue } from '@/lib/localStore';
-import type { WeeklyChallenge, ChallengeSubmission, LeaderboardEntry } from '@/types/gamify';
+import type { WeeklyChallenge, ChallengeQuestion, ChallengeSubmission, LeaderboardEntry } from '@/types/gamify';
 
 const SUBMISSIONS_KEY = 'studyspace:challenge-submissions';
 const LEADERBOARD_KEY = 'studyspace:leaderboard';
 
 const NO_SUBMISSIONS: ChallengeSubmission[] = [];
 const NO_LEADERBOARD: LeaderboardEntry[] = [];
+
+function parseChallengeQuestion(value: unknown): ChallengeQuestion | null {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) return null;
+  const question = value as Record<string, unknown>;
+  if (
+    typeof question['id'] !== 'string' ||
+    typeof question['question'] !== 'string' ||
+    !Array.isArray(question['options']) ||
+    !question['options'].every((option) => typeof option === 'string') ||
+    typeof question['answerIndex'] !== 'number' ||
+    typeof question['explanation'] !== 'string'
+  ) return null;
+  return {
+    id: question['id'],
+    question: question['question'],
+    options: question['options'],
+    answerIndex: question['answerIndex'],
+    explanation: question['explanation'],
+  };
+}
 
 export function useChallengeSubmissions(): ChallengeSubmission[] {
   return useStoredValue<ChallengeSubmission[]>(SUBMISSIONS_KEY, NO_SUBMISSIONS);
@@ -33,15 +53,9 @@ export async function fetchActiveChallenge(): Promise<WeeklyChallenge | null> {
     description: data.description ?? '',
     subject: data.subject,
     questions: Array.isArray(data.questions)
-      ? data.questions.filter((question): question is WeeklyChallenge['questions'][number] => {
-          if (typeof question !== 'object' || question === null || Array.isArray(question)) return false;
-          const item = question as Record<string, unknown>;
-          return typeof item['id'] === 'string'
-            && typeof item['question'] === 'string'
-            && Array.isArray(item['options'])
-            && item['options'].every((option) => typeof option === 'string')
-            && typeof item['answerIndex'] === 'number'
-            && typeof item['explanation'] === 'string';
+      ? data.questions.flatMap((question) => {
+          const parsed = parseChallengeQuestion(question);
+          return parsed ? [parsed] : [];
         })
       : [],
     time_limit_seconds: data.time_limit_seconds,
