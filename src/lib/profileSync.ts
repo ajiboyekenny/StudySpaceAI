@@ -44,7 +44,9 @@ export async function syncProfile(): Promise<void> {
     const profile: UserProfile = {
       display_name: data.display_name ?? '',
       education_level: (data.education_level as EducationLevel) ?? 'secondary',
-      selected_subjects: data.selected_subjects ?? [],
+      selected_subjects: Array.isArray(data.selected_subjects)
+        ? data.selected_subjects.filter((subject): subject is string => typeof subject === 'string')
+        : [],
       onboarded: data.onboarded ?? false,
     };
     const local = readJson<UserProfile>(PROFILE_KEY, DEFAULT_PROFILE);

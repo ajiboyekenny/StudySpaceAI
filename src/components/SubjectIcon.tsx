@@ -24,7 +24,7 @@ interface SubjectIconProps {
 
 export default function SubjectIcon({ subject, accent, className = '', iconClassName = 'h-6 w-6' }: SubjectIconProps) {
   const Icon = ICONS[subject];
-  const accentClass = ACCENT_BG[accent] ?? ACCENT_BG.cyan;
+  const accentClass = ACCENT_BG[accent] ?? ACCENT_BG['cyan'];
   return (
     <span className={`inline-flex items-center justify-center rounded-xl ring-1 ${accentClass} ${className}`}>
       <Icon className={iconClassName} aria-hidden="true" />

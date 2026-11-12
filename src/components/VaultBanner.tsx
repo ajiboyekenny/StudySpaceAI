@@ -1,6 +1,7 @@
 import { FolderOpen } from 'lucide-react';
 import ExternalAction from '@/components/ExternalAction';
-import { VAULT_LINKS } from '@/config/resources';
+
+const VAULT_LINKS = { hundredLevel: '' };
 
 interface VaultBannerProps {
   zeroBandwidth: boolean;
