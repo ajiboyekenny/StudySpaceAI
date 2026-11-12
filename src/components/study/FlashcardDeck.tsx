@@ -21,10 +21,15 @@ export default function FlashcardDeck({ chapterId, cards }: FlashcardDeckProps) 
   const [flipped, setFlipped] = useState(false);
 
   const card = cards[index];
-  const cardStatus = statuses[card.id];
   const masteredCount = cards.filter((c) => statuses[c.id] === 'mastered').length;
   const reviewCount = cards.filter((c) => statuses[c.id] === 'review').length;
   const allRated = masteredCount + reviewCount === cards.length;
+
+  if (!card) {
+    return <p className="rounded-lg border border-slate-700 p-4 text-sm text-slate-300">No flashcards are available for this chapter.</p>;
+  }
+
+  const cardStatus = statuses[card.id];
 
   const goTo = (next: number) => {
     setIndex(next);

@@ -7,12 +7,6 @@ import { syncProfile } from '@/lib/profileSync';
 import { syncAchievements } from '@/lib/achievements';
 import { syncChallengeSubmissions, syncLeaderboard } from '@/lib/challengeSync';
 
-interface SavedChapterRow {
-  chapter_id: string;
-  chapter_snapshot: Chapter;
-  saved_at: string;
-}
-
 interface CardProgressRow {
   chapter_id: string;
   card_id: string;
@@ -44,13 +38,27 @@ async function currentUserId(): Promise<string | null> {
   return data.user?.id ?? null;
 }
 
+function isChapter(value: unknown): value is Chapter {
+  if (typeof value !== 'object' || value === null) return false;
+  const chapter = value as Record<string, unknown>;
+  return (
+    typeof chapter['id'] === 'string' &&
+    typeof chapter['subject'] === 'string' &&
+    typeof chapter['number'] === 'number' &&
+    typeof chapter['title'] === 'string' &&
+    Array.isArray(chapter['summary']) &&
+    Array.isArray(chapter['flashcards']) &&
+    Array.isArray(chapter['quiz'])
+  );
+}
+
 export async function persistSavedChapter(snapshot: SavedChapterSnapshot): Promise<void> {
   const userId = await currentUserId();
   if (!userId) return;
   await supabase.from('studyspace_saved_chapters').upsert({
     user_id: userId,
     chapter_id: snapshot.chapter.id,
-    chapter_snapshot: snapshot.chapter,
+    chapter_snapshot: JSON.parse(JSON.stringify(snapshot.chapter)) as import('@/integrations/supabase/types').Json,
     saved_at: snapshot.savedAt,
   });
 }
@@ -122,10 +130,11 @@ export async function syncStudyData(): Promise<void> {
     supabase.from('studyspace_streaks').select('last_study_date, current_streak, longest_streak').maybeSingle(),
   ]);
 
-  const savedRows = (savedResult.data ?? []) as SavedChapterRow[];
+  const savedRows = savedResult.data ?? [];
   const localSavedIds = readJson<string[]>('studyspace:saved-chapters', []);
   const savedIds = new Set(localSavedIds);
   savedRows.forEach((row) => {
+    if (!isChapter(row.chapter_snapshot)) return;
     const local = readJson<SavedChapterSnapshot | null>(`studyspace:chapter:${row.chapter_id}`, null);
     if (!local || new Date(row.saved_at).getTime() >= new Date(local.savedAt).getTime()) {
       const snapshot: SavedChapterSnapshot = { savedAt: row.saved_at, chapter: row.chapter_snapshot };

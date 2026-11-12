@@ -27,7 +27,7 @@ function stripMarkdown(text: string): string {
 export default function SummaryReader({ sections }: SummaryReaderProps) {
   const storedScale = useStoredValue<FontScale>(FONT_SCALE_KEY, 'md');
   const scaleIndex = Math.max(0, FONT_SCALES.indexOf(storedScale));
-  const scale = FONT_SCALES[scaleIndex];
+  const scale = FONT_SCALES[scaleIndex] ?? 'md';
   const bodyClass = BODY_CLASS[scale];
 
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -45,7 +45,7 @@ export default function SummaryReader({ sections }: SummaryReaderProps) {
   }, [sections]);
 
   const changeScale = (delta: number) => {
-    const next = FONT_SCALES[Math.min(FONT_SCALES.length - 1, Math.max(0, scaleIndex + delta))];
+    const next = FONT_SCALES[Math.min(FONT_SCALES.length - 1, Math.max(0, scaleIndex + delta))] ?? 'md';
     writeJson(FONT_SCALE_KEY, next);
   };
 

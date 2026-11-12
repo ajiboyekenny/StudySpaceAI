@@ -37,7 +37,12 @@ export default function QuizEngine({ chapterId, subject, questions }: QuizEngine
   const question = questions[index];
   const percent = Math.round((score / questions.length) * 100);
 
+  if (!question && !finished) {
+    return <EmptyState title="No questions yet" body="This chapter does not have quiz questions yet." icon={ClipboardCheck} />;
+  }
+
   const choose = (option: number) => {
+    if (!question) return;
     if (selected !== null) return;
     const correct = option === question.answerIndex;
     setSelected(option);
