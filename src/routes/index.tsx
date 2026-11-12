@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import AppHeader from "@/components/AppHeader";
 import BottomNav, { type TabId } from "@/components/BottomNav";
 import { getChapter } from "@/data/catalog";
+import { getSavedSnapshot } from "@/lib/offlineLibrary";
 import { useAuth } from "@/lib/auth";
 import { useProfile } from "@/lib/profileSync";
 import AuthView from "@/views/AuthView";
@@ -44,6 +45,11 @@ function Index() {
   const [activeSubject, setActiveSubject] = useState<SubjectId>("biology");
   const [openChapterId, setOpenChapterId] = useState<string | null>(null);
   const [chapterTab, setChapterTab] = useState<ChapterTab>("read");
+  const activeChapter = useMemo(() => {
+    if (!openChapterId) return null;
+    if (zeroBandwidth) return getSavedSnapshot(openChapterId)?.chapter ?? null;
+    return getChapter(openChapterId) ?? null;
+  }, [openChapterId, zeroBandwidth]);
 
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center bg-slate-950 text-sm text-slate-300">Loading StudySpace…</div>;
@@ -109,7 +115,7 @@ function Index() {
       <BottomNav active={activeTab} onChange={setActiveTab} />
       {openChapterId && (
         <ChapterReader
-          chapter={zeroBandwidth && !profile.onboarded ? null : getChapter(openChapterId) ?? null}
+          chapter={activeChapter}
           initialTab={chapterTab}
           onClose={() => setOpenChapterId(null)}
         />
